@@ -1,0 +1,438 @@
+/* ============================================================
+   Base, layering & shared components
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(120% 80% at 70% 0%, oklch(0.24 0.06 262) 0%, transparent 60%),
+    var(--bg);
+  background-attachment: scroll;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Layering ----------
+   z 0  → background type (behind the can)
+   z 1  → fixed WebGL canvas
+   z 2  → foreground content
+   Sections must NOT set z-index (that would create a stacking context and
+   trap their background type above the canvas). */
+/* Sized to the *large* viewport so a mobile URL bar showing / hiding never
+   resizes the canvas (which would re-scale the can mid-scroll). The
+   choreography measures this same height when placing the can. */
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  z-index: 1;
+  pointer-events: none;
+}
+.layer-back {
+  position: absolute;
+  z-index: 0;
+}
+.layer-front {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Type utilities ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 125%;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 850;
+  font-stretch: 112%;
+  font-size: var(--text-h2);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.label--accent {
+  color: var(--accent);
+}
+.lede {
+  font-size: var(--text-lg);
+  color: var(--ink-2);
+  max-width: 38ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+.accent {
+  color: var(--accent);
+}
+/* mask for line reveals — the inner span must be inline-block so transforms apply */
+.split-line {
+  display: block;
+  overflow: hidden;
+  padding: 0 0.08em 0.06em 0;
+  margin-bottom: -0.06em;
+}
+.split-line > span {
+  display: inline-block;
+  will-change: transform; /* scrubbed every frame → keep on its own layer */
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  --h: 3.4rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: var(--h);
+  padding: 0 1.6rem 0 1.8rem;
+  border-radius: var(--radius);
+  font-weight: 650;
+  font-size: var(--text-sm);
+  letter-spacing: 0.01em;
+  isolation: isolate;
+  overflow: hidden;
+  transition: color var(--dur-m) var(--ease-out);
+  will-change: transform;
+}
+.btn--primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.btn--primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  border-radius: inherit;
+  transform: translateY(101%);
+  transition: transform var(--dur-m) var(--ease-out);
+}
+.btn--ghost {
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+.btn--ghost::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: translateY(101%);
+  transition: transform var(--dur-m) var(--ease-out);
+}
+@media (hover: hover) {
+  .btn--primary:hover::before,
+  .btn--ghost:hover::before {
+    transform: translateY(0);
+  }
+  .btn--ghost:hover {
+    color: var(--on-accent);
+  }
+}
+.btn__icon {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--on-accent);
+  color: var(--accent);
+  transition: transform var(--dur-m) var(--ease-out);
+}
+.btn--ghost .btn__icon {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+@media (hover: hover) {
+  .btn:hover .btn__icon {
+    transform: rotate(-45deg);
+  }
+}
+
+/* ---------- Custom cursor (desktop only) ---------- */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+.cursor__dot,
+.cursor__ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+}
+.cursor__ring {
+  width: 38px;
+  height: 38px;
+  border: 1px solid oklch(0.96 0.008 250 / 0.35);
+  display: grid;
+  place-items: center;
+  transition:
+    width var(--dur-m) var(--ease-out),
+    height var(--dur-m) var(--ease-out),
+    background-color var(--dur-m) var(--ease-out),
+    border-color var(--dur-m) var(--ease-out);
+}
+.cursor__label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--on-accent);
+  opacity: 0;
+  transition: opacity var(--dur-s) var(--ease-out);
+}
+.cursor.is-drag .cursor__ring {
+  width: 86px;
+  height: 86px;
+  background: var(--accent);
+  border-color: transparent;
+}
+.cursor.is-drag .cursor__label {
+  opacity: 1;
+}
+.cursor.is-link .cursor__ring {
+  width: 64px;
+  height: 64px;
+  border-color: var(--accent);
+}
+@media (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* ---------- Loader ---------- */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: var(--gutter);
+  background: var(--bg);
+  color: var(--ink);
+}
+.loader__brand {
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  overflow: hidden;
+  font-size: clamp(3rem, 13vw, 11rem);
+}
+.loader__brand span {
+  display: inline-block;
+}
+.loader__foot {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.loader__count {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 125%;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+.loader__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem var(--gutter);
+  transition: transform var(--dur-l) var(--ease-out);
+}
+.nav.is-hidden {
+  transform: translateY(-110%);
+}
+.nav__logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  font-stretch: 125%;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.nav__logo svg {
+  width: 1rem;
+  color: var(--accent);
+}
+.nav__links {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border-radius: var(--radius);
+  background: oklch(0.2 0.04 262 / 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.nav__links a {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  transition:
+    color var(--dur-s) var(--ease-out),
+    background-color var(--dur-s) var(--ease-out);
+}
+@media (hover: hover) {
+  .nav__links a:hover {
+    color: var(--ink);
+    background: var(--line);
+  }
+}
+.nav__links a.is-active {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+.nav .btn {
+  --h: 2.75rem;
+  padding: 0 0.5rem 0 1.2rem;
+}
+@media (max-width: 860px) {
+  .nav__links {
+    display: none;
+  }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  .nav { padding-block: 0.6rem; }
+  .nav .btn { --h: 2.4rem; }
+}
+@media (max-width: 559px) {
+  .nav { padding-top: calc(0.9rem + env(safe-area-inset-top)); }
+  .nav .btn { --h: 2.6rem; }
+}
+
+/* ---------- Reduced motion ----------
+   Note: transitions are removed entirely instead of the common
+   "transition-duration: 0.01ms" trick — that one turns *every* property into
+   a CSS transition (transition-property defaults to "all"), which fights
+   GSAP's per-frame inline styles and can freeze elements mid-tween. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

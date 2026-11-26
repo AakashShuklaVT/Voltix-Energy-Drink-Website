@@ -1,0 +1,56 @@
+/* ============================================================
+   VOLTIX design tokens
+   Art direction: "Bottled lightning" — dark immersive, one electric accent.
+   ============================================================ */
+:root {
+  /* colour — never pure black / white */
+  --bg: oklch(0.16 0.035 262);          /* #070c18 deep navy */
+  --bg-2: oklch(0.2 0.04 262);
+  --bg-3: oklch(0.25 0.045 262);
+  --ink: oklch(0.96 0.008 250);
+  --ink-2: oklch(0.96 0.008 250 / 0.74);
+  --ink-3: oklch(0.96 0.008 250 / 0.52);
+  --ink-4: oklch(0.96 0.008 250 / 0.3);
+  --line: oklch(0.96 0.008 250 / 0.09);
+  --line-strong: oklch(0.96 0.008 250 / 0.18);
+
+  --accent: #c5f82a;      /* tweened by GSAP when the flavour changes */
+  --accent-deep: #8fc414;
+  --on-accent: #08101f;
+
+  /* type */
+  --font-display: 'Archivo Variable', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --text-mega: clamp(4.5rem, 19vw, 22rem);
+  --text-display: clamp(3rem, 8.5vw + 0.5rem, 9.5rem);
+  --text-h1: clamp(2.4rem, 5vw + 1rem, 5.6rem);
+  --text-h2: clamp(1.9rem, 3.2vw + 0.6rem, 3.6rem);
+  --text-h3: clamp(1.25rem, 1.4vw + 0.6rem, 1.75rem);
+  --text-lg: clamp(1.06rem, 0.6vw + 0.8rem, 1.3rem);
+  --text-body: clamp(0.98rem, 0.3vw + 0.86rem, 1.08rem);
+  --text-sm: clamp(0.84rem, 0.2vw + 0.78rem, 0.92rem);
+  --text-label: clamp(0.68rem, 0.15vw + 0.64rem, 0.78rem);
+
+  /* space */
+  --gutter: clamp(1rem, 3.2vw, 3rem);
+  --space-xs: 0.5rem;
+  --space-s: 1rem;
+  --space-m: clamp(1.5rem, 2.5vw, 2.5rem);
+  --space-l: clamp(3rem, 6vw, 6rem);
+  --space-xl: clamp(5rem, 12vw, 12rem);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-s: 250ms;
+  --dur-m: 450ms;
+  --dur-l: 800ms;
+
+  --radius: 999px;
+  --radius-card: 22px;
+
+  color-scheme: dark;
+}
